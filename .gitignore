@@ -7,4 +7,4 @@
 /build
 /captures
 .externalNativeBuild
-/grade.properties
+/gradle.properties
