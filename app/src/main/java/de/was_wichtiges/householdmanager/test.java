@@ -6,5 +6,4 @@ package de.was_wichtiges.householdmanager;
 public class test {
 
 
-   // aSDsadASDDS
 }
