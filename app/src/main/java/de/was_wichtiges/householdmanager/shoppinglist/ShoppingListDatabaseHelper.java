@@ -20,8 +20,9 @@ public class ShoppingListDatabaseHelper extends SQLiteOpenHelper {
     // TABLE: shopping list item
     public static final String TABLE_SHOPPING_LIST = "shopping_list_items";
     public static final String COLUMN_ID = "itemID";
-    public static final String COLUMN_PRODUCT = "product";
+    public static final String COLUMN_NAME = "name";
     public static final String COLUMN_QUANTITY = "quantity";
+    public static final String COLUMN_UNIT = "unit";
     public static final String COLUMN_CHECKED = "checked";
 
     // table attachement
@@ -31,8 +32,9 @@ public class ShoppingListDatabaseHelper extends SQLiteOpenHelper {
     public static final String SQL_CREATE =
             "CREATE TABLE " + TABLE_SHOPPING_LIST +
                     "(" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    COLUMN_PRODUCT + " TEXT NOT NULL, " +
+                    COLUMN_NAME + " TEXT NOT NULL, " +
                     COLUMN_QUANTITY + " INTEGER NOT NULL, " +
+                    COLUMN_UNIT + " TEXT NOT NULL, " +
                     COLUMN_CHECKED + " BOOLEAN NOT NULL DEFAULT 0);";
 
     // SQL command to delete TABLE: shopping list item
@@ -47,6 +49,20 @@ public class ShoppingListDatabaseHelper extends SQLiteOpenHelper {
         Log.d(LOG_TAG, "DbHelper hat die Datenbank: " + getDatabaseName() + " erzeugt.");
     }
 
+    /**
+     * Returns a string Object showing all colums of the table
+     * @return
+     */
+    public String[] getAllColumnsTableShoppingList(){
+        String[] columns = {
+                COLUMN_ID,
+                COLUMN_NAME,
+                COLUMN_QUANTITY,
+                COLUMN_UNIT,
+                COLUMN_CHECKED
+        };
+        return columns;
+    }
     /**
      * The onCreate Method is called in case the database does not exist yet.
      * @param db
