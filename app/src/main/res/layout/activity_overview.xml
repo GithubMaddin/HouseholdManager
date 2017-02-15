@@ -12,16 +12,24 @@
     <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/tile"
+            android:background="@drawable/overview_button"
             android:layout_margin="5dp"
             android:elevation="4dp"
             android:id="@+id/lay_shopping_list">
 
+        <ImageView android:layout_width="24dp"
+                   android:layout_height="24dp"
+                   android:layout_margin="12dp"
+                   android:id="@+id/img_tmp1"
+                   android:src="@drawable/ic_local_grocery_store_black_24dp"/>
+
         <TextView android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
                   android:text="@string/shopping_list"
-                  android:textSize="20dp"
-                  android:layout_margin="12dp"
+                  android:textSize="20sp"
+                  android:layout_marginTop="12dp"
+                  android:layout_marginRight="12dp"
+                  android:layout_toRightOf="@id/img_tmp1"
                   android:id="@+id/txt_tmp1"/>
 
         <TextView android:layout_width="match_parent"
@@ -36,16 +44,24 @@
     <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/tile"
+            android:background="@drawable/overview_button"
             android:layout_margin="5dp"
             android:elevation="4dp"
             android:id="@+id/lay_todo">
 
+        <ImageView android:layout_width="24dp"
+                   android:layout_height="24dp"
+                   android:layout_margin="12dp"
+                   android:id="@+id/img_tmp2"
+                   android:src="@drawable/ic_content_paste_black_24dp"/>
+
         <TextView android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
                   android:text="@string/todo"
-                  android:textSize="20dp"
-                  android:layout_margin="12dp"
+                  android:textSize="20sp"
+                  android:layout_marginTop="12dp"
+                  android:layout_marginRight="12dp"
+                  android:layout_toRightOf="@id/img_tmp2"
                   android:id="@+id/txt_tmp2"/>
 
         <TextView android:layout_width="match_parent"
@@ -60,16 +76,24 @@
     <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/tile"
+            android:background="@drawable/overview_button"
             android:layout_margin="5dp"
             android:elevation="4dp"
             android:id="@+id/lay_account_book">
 
+        <ImageView android:layout_width="24dp"
+                   android:layout_height="24dp"
+                   android:layout_margin="12dp"
+                   android:id="@+id/img_tmp3"
+                   android:src="@drawable/ic_receipt_black_24dp"/>
+
         <TextView android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
                   android:text="@string/account_book"
-                  android:textSize="20dp"
-                  android:layout_margin="12dp"
+                  android:textSize="20sp"
+                  android:layout_marginTop="12dp"
+                  android:layout_marginRight="12dp"
+                  android:layout_toRightOf="@id/img_tmp3"
                   android:id="@+id/txt_tmp3"/>
 
         <TextView android:layout_width="match_parent"
