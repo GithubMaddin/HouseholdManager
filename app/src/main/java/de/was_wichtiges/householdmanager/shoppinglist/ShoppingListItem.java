@@ -32,6 +32,15 @@ public class ShoppingListItem {
         this.checked = checked;
     }
 
+    /**
+     * to String
+     * @return Summary of shoppint list Item
+     */
+    @Override
+    public String toString() {
+        return "Item: " + name + "(" + quantity + " " + unit +"); item is checked?:" + checked;
+    }
+
     // =============================================================
     // == GET and SET Methods ======================================
     //==============================================================
