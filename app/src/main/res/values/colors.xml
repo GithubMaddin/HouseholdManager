@@ -4,6 +4,5 @@
     <color name="colorPrimaryDark">#055a04</color>
     <color name="colorAccent">#FF4081</color>
     <color name="tile">#eaeaea</color>
-
-    <color name="test">#ff00ff</color>
+    <color name="tile_pressed">#a7a7a7</color>
 </resources>
