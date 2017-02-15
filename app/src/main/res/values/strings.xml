@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Household Manager</string>
+    <string name="shopping_list">Einkaufsliste</string>
+    <string name="todo">Todo\'s</string>
+    <string name="account_book">Rechnungen</string>
 
+    <string name="open">Öffnen</string>
 </resources>
