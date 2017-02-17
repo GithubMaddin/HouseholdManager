@@ -14,16 +14,18 @@ public class ShoppingListDatabaseHelper extends SQLiteOpenHelper {
     private static final String LOG_TAG = ShoppingListDatabaseHelper.class.getSimpleName();
 
     // database name and version
-    public static final String DB_NAME = "shopping_list.db";
-    public static final int DB_VERSION = 1;
+    public static final String DB_NAME = "shopping_list2.db";
+    public static final int DB_VERSION = 2;
 
     // TABLE: shopping list item
-    public static final String TABLE_SHOPPING_LIST = "shopping_list_items";
-    public static final String COLUMN_ID = "itemID";
-    public static final String COLUMN_NAME = "name";
+     public static final String TABLE_SHOPPING_LIST = "shopping_list";
+
+    public static final String COLUMN_ID = "_id";
+    public static final String COLUMN_PRODUCT = "product";
     public static final String COLUMN_QUANTITY = "quantity";
-    public static final String COLUMN_UNIT = "unit";
     public static final String COLUMN_CHECKED = "checked";
+
+
 
     // table attachement
         //TODO: create table attachements
@@ -32,10 +34,11 @@ public class ShoppingListDatabaseHelper extends SQLiteOpenHelper {
     public static final String SQL_CREATE =
             "CREATE TABLE " + TABLE_SHOPPING_LIST +
                     "(" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    COLUMN_NAME + " TEXT NOT NULL, " +
+                    COLUMN_PRODUCT + " TEXT NOT NULL, " +
                     COLUMN_QUANTITY + " INTEGER NOT NULL, " +
-                    COLUMN_UNIT + " TEXT NOT NULL, " +
                     COLUMN_CHECKED + " BOOLEAN NOT NULL DEFAULT 0);";
+
+// COLUMN_UNIT + "  TEXT NOT NULL, " +
 
     // SQL command to delete TABLE: shopping list item
     public static final String SQL_DROP = "DROP TABLE IF EXISTS " + TABLE_SHOPPING_LIST;
@@ -49,20 +52,7 @@ public class ShoppingListDatabaseHelper extends SQLiteOpenHelper {
         Log.d(LOG_TAG, "DbHelper hat die Datenbank: " + getDatabaseName() + " erzeugt.");
     }
 
-    /**
-     * Returns a string Object showing all colums of the table
-     * @return
-     */
-    public String[] getAllColumnsTableShoppingList(){
-        String[] columns = {
-                COLUMN_ID,
-                COLUMN_NAME,
-                COLUMN_QUANTITY,
-                COLUMN_UNIT,
-                COLUMN_CHECKED
-        };
-        return columns;
-    }
+
     /**
      * The onCreate Method is called in case the database does not exist yet.
      * @param db
@@ -88,17 +78,13 @@ public class ShoppingListDatabaseHelper extends SQLiteOpenHelper {
      */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        Log.d(LOG_TAG, "Update necessary: Old version: " + oldVersion + " New Version: " + newVersion) ;
         switch(oldVersion){
-            case 2:
-                try {
+            case 1:
                     Log.d(LOG_TAG, "Update from version 1 to 2: Colmumn ***** was added to table ****");
-                    //db.execSQL(SQL_DROP);
-                    //onCreate(db);
-                }
-                catch (Exception ex){
-                    Log.e(LOG_TAG, "An error occured when updating from version 1 to 2: "+ ex.getMessage());
-                }
-            case 3:
+                    db.execSQL(SQL_DROP);
+                    onCreate(db);
+            case 2:
                 break;
             default:
                 Log.d(LOG_TAG, "No suitable update for database version" + newVersion + " available");

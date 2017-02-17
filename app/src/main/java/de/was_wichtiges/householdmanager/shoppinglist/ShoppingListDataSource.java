@@ -1,14 +1,15 @@
 package de.was_wichtiges.householdmanager.shoppinglist;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-import de.was_wichtiges.householdmanager.shoppinglist.ShoppingListItem;
 
+import android.content.ContentValues;
+import android.database.Cursor;
 import java.util.ArrayList;
 import java.util.List;
+
+
 
 /**
  * Created by M.Friedrich on 15.02.2017.
@@ -21,7 +22,12 @@ public class ShoppingListDataSource {
     private SQLiteDatabase database;
     private ShoppingListDatabaseHelper dbHelper;
 
-    private String[] columns = dbHelper.getAllColumnsTableShoppingList();
+    private String[] columns = {
+            ShoppingListDatabaseHelper.COLUMN_ID,
+            ShoppingListDatabaseHelper.COLUMN_PRODUCT,
+            ShoppingListDatabaseHelper.COLUMN_QUANTITY,
+            ShoppingListDatabaseHelper.COLUMN_CHECKED
+    };
 
     /**
      * Constructor
@@ -57,20 +63,22 @@ public class ShoppingListDataSource {
      */
     public ShoppingListItem createShoppingMemo(String product, int quantity) {
         ContentValues values = new ContentValues();
-        values.put(ShoppingListDatabaseHelper.COLUMN_NAME, product);
+        values.put(ShoppingListDatabaseHelper.COLUMN_PRODUCT, product);
         values.put(ShoppingListDatabaseHelper.COLUMN_QUANTITY, quantity);
 
         long insertId = database.insert(ShoppingListDatabaseHelper.TABLE_SHOPPING_LIST, null, values);
+
+        Log.d(LOG_TAG, "xxxxxxxxxx Eintrag in DB eingetragen xxxxxxxxx");
 
         Cursor cursor = database.query(ShoppingListDatabaseHelper.TABLE_SHOPPING_LIST,
                 columns, ShoppingListDatabaseHelper.COLUMN_ID + "=" + insertId,
                 null, null, null, null);
 
         cursor.moveToFirst();
-        ShoppingListItem shoppingListItem = cursorToShoppingMemo(cursor);
+        ShoppingListItem shoppingMemo = cursorToShoppingMemo(cursor);
         cursor.close();
 
-        return shoppingListItem;
+        return shoppingMemo;
     }
 
     /**
@@ -99,7 +107,7 @@ public class ShoppingListDataSource {
         int intValueChecked = (newChecked)? 1 : 0;
 
         ContentValues values = new ContentValues();
-        values.put(ShoppingListDatabaseHelper.COLUMN_NAME, newProduct);
+        values.put(ShoppingListDatabaseHelper.COLUMN_PRODUCT, newProduct);
         values.put(ShoppingListDatabaseHelper.COLUMN_QUANTITY, newQuantity);
         values.put(ShoppingListDatabaseHelper.COLUMN_CHECKED, intValueChecked);
 
@@ -125,22 +133,21 @@ public class ShoppingListDataSource {
      * @param cursor
      * @return ShoppingListItem
      */
+
     private ShoppingListItem cursorToShoppingMemo(Cursor cursor) {
         int idIndex = cursor.getColumnIndex(ShoppingListDatabaseHelper.COLUMN_ID);
-        int idName = cursor.getColumnIndex(ShoppingListDatabaseHelper.COLUMN_NAME);
+        int idProduct = cursor.getColumnIndex(ShoppingListDatabaseHelper.COLUMN_PRODUCT);
         int idQuantity = cursor.getColumnIndex(ShoppingListDatabaseHelper.COLUMN_QUANTITY);
-        int idUnit = cursor.getColumnIndex(ShoppingListDatabaseHelper.COLUMN_UNIT);
         int idChecked = cursor.getColumnIndex(ShoppingListDatabaseHelper.COLUMN_CHECKED);
 
-        long id = cursor.getLong(idIndex);
-        String name = cursor.getString(idName);
+        String product = cursor.getString(idProduct);
         int quantity = cursor.getInt(idQuantity);
+        long id = cursor.getLong(idIndex);
         int intValueChecked = cursor.getInt(idChecked);
-        ShoppingListItem.Unit unit = ShoppingListItem.Unit.KG; //TODO: Methode umd String zu Unit zu wandeln
 
         boolean isChecked = (intValueChecked != 0);
 
-        ShoppingListItem shoppingListItem = new ShoppingListItem(name, quantity, unit, isChecked);
+        ShoppingListItem shoppingListItem = new ShoppingListItem(product, quantity, isChecked);
 
         return shoppingListItem;
     }
@@ -149,6 +156,7 @@ public class ShoppingListDataSource {
      * Returns a list of all ShoppingListItems from the database
      * @return
      */
+
     public List<ShoppingListItem> getAllShoppingListItems() {
         List<ShoppingListItem> shoppingListItemList = new ArrayList<>();
 

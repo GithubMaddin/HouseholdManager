@@ -4,31 +4,30 @@ package de.was_wichtiges.householdmanager.shoppinglist;
  * Created by M.Friedrich on 15.02.2017.
  */
 public class ShoppingListItem {
-    public enum Unit {
+    /*public enum Unit {
         KG,     //kilo
         G,      // gram
         PCS,    // pieces
         L,      // liter
         ML;     // milliliter
-    }
+    }*/
 
     private long itemID;
     private String name;
     private int quantity;
-    private Unit unit;
+    //private Unit unit;
     private boolean checked;
 
     /**
      * Constructor
      * @param name: name of product
      * @param quantity: quantity
-     * @param unit: unit
      * @param checked: status whether item is checked
      */
-    public ShoppingListItem (String name, int quantity, Unit unit, boolean checked ){
+    public ShoppingListItem (String name, int quantity, boolean checked ){
         this.name = name;
         this.quantity = quantity;
-        this.unit = unit;
+        //this.unit = unit;
         this.checked = checked;
     }
 
@@ -38,7 +37,7 @@ public class ShoppingListItem {
      */
     @Override
     public String toString() {
-        return "Item: " + name + "(" + quantity + " " + unit +"); item is checked?:" + checked;
+        return "Item: " + name + "(" + quantity + "); item is checked?:" + checked;
     }
 
     // =============================================================
@@ -97,17 +96,17 @@ public class ShoppingListItem {
      * Returns unit
      * @return returns unit;
      */
-    public Unit getUnit() {
-        return unit;
-    }
+  //  public Unit getUnit() {
+    //    return unit;
+    //}
 
     /**
      * Set unit
      * @param unit
      */
-    public void setUnit(Unit unit) {
-        this.unit = unit;
-    }
+    //public void setUnit(Unit unit) {
+//        this.unit = unit;
+  //  }
 
     /**
      * Returns true if item is checked
