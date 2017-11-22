@@ -6,6 +6,7 @@ import de.was_wichtiges.householdmanager.*;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+
 import java.util.List;
 
 /**
@@ -44,7 +45,7 @@ public class ShoppingList extends AppCompatActivity {
         dataSource.open();
 
 
-        ShoppingListItem shoppingListItem = dataSource.createShoppingMemo("Testprodukt", 2);
+        ShoppingListItem shoppingListItem = dataSource.createShoppingMemo("Banane", 5);
         Log.d(LOG_TAG, "folgendermaßen sieht das neue Ding  aus " + shoppingListItem.toString());
         Log.d(LOG_TAG, "Es wurde der folgende Eintrag in die Datenbank geschrieben:");
         Log.d(LOG_TAG, "ID: " + shoppingListItem.getItemID() + ", Inhalt: " + shoppingListItem.toString());

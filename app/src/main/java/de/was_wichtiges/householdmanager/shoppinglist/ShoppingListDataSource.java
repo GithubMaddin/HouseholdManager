@@ -26,6 +26,7 @@ public class ShoppingListDataSource {
             ShoppingListDatabaseHelper.COLUMN_ID,
             ShoppingListDatabaseHelper.COLUMN_PRODUCT,
             ShoppingListDatabaseHelper.COLUMN_QUANTITY,
+            ShoppingListDatabaseHelper.COLUMN_UNIT,
             ShoppingListDatabaseHelper.COLUMN_CHECKED
     };
 
@@ -65,6 +66,7 @@ public class ShoppingListDataSource {
         ContentValues values = new ContentValues();
         values.put(ShoppingListDatabaseHelper.COLUMN_PRODUCT, product);
         values.put(ShoppingListDatabaseHelper.COLUMN_QUANTITY, quantity);
+        values.put(ShoppingListDatabaseHelper.COLUMN_UNIT, "kg");
 
         long insertId = database.insert(ShoppingListDatabaseHelper.TABLE_SHOPPING_LIST, null, values);
 
@@ -110,6 +112,7 @@ public class ShoppingListDataSource {
         values.put(ShoppingListDatabaseHelper.COLUMN_PRODUCT, newProduct);
         values.put(ShoppingListDatabaseHelper.COLUMN_QUANTITY, newQuantity);
         values.put(ShoppingListDatabaseHelper.COLUMN_CHECKED, intValueChecked);
+        values.put(ShoppingListDatabaseHelper.COLUMN_UNIT, "kg");
 
         database.update(ShoppingListDatabaseHelper.TABLE_SHOPPING_LIST,
                 values,
@@ -139,15 +142,17 @@ public class ShoppingListDataSource {
         int idProduct = cursor.getColumnIndex(ShoppingListDatabaseHelper.COLUMN_PRODUCT);
         int idQuantity = cursor.getColumnIndex(ShoppingListDatabaseHelper.COLUMN_QUANTITY);
         int idChecked = cursor.getColumnIndex(ShoppingListDatabaseHelper.COLUMN_CHECKED);
+        int idUnit = cursor.getColumnIndex(ShoppingListDatabaseHelper.COLUMN_UNIT);
 
         String product = cursor.getString(idProduct);
         int quantity = cursor.getInt(idQuantity);
         long id = cursor.getLong(idIndex);
         int intValueChecked = cursor.getInt(idChecked);
+        String unit = cursor.getString(idUnit);
 
         boolean isChecked = (intValueChecked != 0);
 
-        ShoppingListItem shoppingListItem = new ShoppingListItem(product, quantity, isChecked);
+        ShoppingListItem shoppingListItem = new ShoppingListItem(product, quantity, unit, isChecked);
 
         return shoppingListItem;
     }

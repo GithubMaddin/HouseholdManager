@@ -23,7 +23,9 @@ public class ShoppingListDatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_ID = "_id";
     public static final String COLUMN_PRODUCT = "product";
     public static final String COLUMN_QUANTITY = "quantity";
+    public static final String COLUMN_UNIT = "unit";
     public static final String COLUMN_CHECKED = "checked";
+    public static final String COLUMN_CHANGED_BY = "changed_by";
 
 
 
@@ -36,6 +38,7 @@ public class ShoppingListDatabaseHelper extends SQLiteOpenHelper {
                     "(" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     COLUMN_PRODUCT + " TEXT NOT NULL, " +
                     COLUMN_QUANTITY + " INTEGER NOT NULL, " +
+                    COLUMN_UNIT + " TEXT NOT NULL, " +
                     COLUMN_CHECKED + " BOOLEAN NOT NULL DEFAULT 0);";
 
 // COLUMN_UNIT + "  TEXT NOT NULL, " +
@@ -79,12 +82,16 @@ public class ShoppingListDatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Log.d(LOG_TAG, "Update necessary: Old version: " + oldVersion + " New Version: " + newVersion) ;
-        switch(oldVersion){
-            case 1:
-                    Log.d(LOG_TAG, "Update from version 1 to 2: Colmumn ***** was added to table ****");
-                    db.execSQL(SQL_DROP);
-                    onCreate(db);
+        switch(oldVersion+1){
             case 2:
+                    Log.d(LOG_TAG, "Update from version 1 to 2: Colmumn ***** was added to table ****");
+                String SQL_ALTER_1 =
+                        "ALTER TABLE " + TABLE_SHOPPING_LIST + " ADD COLUMN " +
+                                COLUMN_CHANGED_BY + " TEXT DEFAULT NULL);";
+
+                db.execSQL(SQL_ALTER_1);
+                    onCreate(db);
+            case 3:
                 break;
             default:
                 Log.d(LOG_TAG, "No suitable update for database version" + newVersion + " available");

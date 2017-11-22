@@ -4,40 +4,67 @@ package de.was_wichtiges.householdmanager.shoppinglist;
  * Created by M.Friedrich on 15.02.2017.
  */
 public class ShoppingListItem {
-    /*public enum Unit {
-        KG,     //kilo
-        G,      // gram
-        PCS,    // pieces
-        L,      // liter
-        ML;     // milliliter
-    }*/
+    public enum Unit {
+        KG("kilogram"),     //kilo
+        G("gram"),      // gram
+        PCS("pieces"),    // pieces
+        L("liter"),      // liter
+        ML("milliliter");     // milliliter
+
+        private String name;
+
+        Unit(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String toString() {
+            return name;
+        }
+
+        public static Unit getUnitFromString(String name) {
+            for (Unit unit : Unit.values()) {
+                if (unit.name.equals(name)) {
+                    return unit;
+                }
+            }
+          throw new RuntimeException("Cannot find unit '"+name+"'");
+        }
+    }
 
     private long itemID;
     private String name;
     private int quantity;
-    //private Unit unit;
+    private String unit;
     private boolean checked;
+
+    private String changedBy;
+    private int lastChange;
 
     /**
      * Constructor
-     * @param name: name of product
+     *
+     * @param name:     name of product
      * @param quantity: quantity
-     * @param checked: status whether item is checked
+     * @param checked:  status whether item is checked
      */
-    public ShoppingListItem (String name, int quantity, boolean checked ){
+    public ShoppingListItem(String name, int quantity, String unit, boolean checked) {
         this.name = name;
         this.quantity = quantity;
-        //this.unit = unit;
+        this.unit = unit;
         this.checked = checked;
+
+ // Unit.getUnitFromString(unit);
     }
 
     /**
      * to String
+     *
      * @return Summary of shoppint list Item
      */
     @Override
     public String toString() {
-        return "Item: " + name + "(" + quantity + "); item is checked?:" + checked;
+        return "Item: " + name + "(" + quantity + " " + unit + "); item is checked?:" + checked;
     }
 
     // =============================================================
@@ -46,6 +73,7 @@ public class ShoppingListItem {
 
     /**
      * Returns itemID
+     *
      * @return itemID
      */
     public long getItemID() {
@@ -54,6 +82,7 @@ public class ShoppingListItem {
 
     /**
      * Set itemID
+     *
      * @param itemID
      */
     public void setItemID(long itemID) {
@@ -62,6 +91,7 @@ public class ShoppingListItem {
 
     /**
      * Returns name
+     *
      * @return name: namem of the Product
      */
     public String getName() {
@@ -70,6 +100,7 @@ public class ShoppingListItem {
 
     /**
      * Set name
+     *
      * @param name: name of the product
      */
     public void setName(String name) {
@@ -78,6 +109,7 @@ public class ShoppingListItem {
 
     /**
      * Returns quantity
+     *
      * @return quantity
      */
     public int getQuantity() {
@@ -86,6 +118,7 @@ public class ShoppingListItem {
 
     /**
      * Set Quantity
+     *
      * @param quantity
      */
     public void setQuantity(int quantity) {
@@ -94,22 +127,25 @@ public class ShoppingListItem {
 
     /**
      * Returns unit
+     *
      * @return returns unit;
      */
-  //  public Unit getUnit() {
-    //    return unit;
-    //}
+    public String getUnit() {
+        return unit;
+    }
 
     /**
      * Set unit
+     *
      * @param unit
      */
-    //public void setUnit(Unit unit) {
-//        this.unit = unit;
-  //  }
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
 
     /**
      * Returns true if item is checked
+     *
      * @return isChecked: status whether item is checked.
      */
     public boolean isChecked() {
@@ -118,6 +154,7 @@ public class ShoppingListItem {
 
     /**
      * Set checked
+     *
      * @param checked
      */
     public void setChecked(boolean checked) {
