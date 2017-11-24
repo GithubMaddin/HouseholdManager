@@ -1,12 +1,14 @@
 
 package de.was_wichtiges.householdmanager.shoppinglist;
 
-import android.util.Log;
-import de.was_wichtiges.householdmanager.*;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import de.was_wichtiges.householdmanager.R;
 
-
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,9 +20,12 @@ public class ShoppingList extends AppCompatActivity {
 
     private ShoppingListDataSource dataSource;
 
+    private ListView listShopping;
+
     /**
      * when activity is activated
      * - create new database object
+     *
      * @param savedInstanceState
      */
     @Override
@@ -28,9 +33,20 @@ public class ShoppingList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shopping_list);
 
+        listShopping = (ListView) findViewById(R.id.lst_shopping);
+
+        ArrayList<String> data = new ArrayList<>();
+
         Log.d(LOG_TAG, "Create new database object");
         dataSource = new ShoppingListDataSource(this);
+        dataSource.open();
 
+        for (ShoppingListItem shoppingListItem : dataSource.getAllShoppingListItems()) {
+            data.add(shoppingListItem.getName() + " " + shoppingListItem.getQuantity() + " " + shoppingListItem.getUnit());
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, data);
+        listShopping.setAdapter(adapter);
     }
 
     /**
@@ -51,7 +67,6 @@ public class ShoppingList extends AppCompatActivity {
         Log.d(LOG_TAG, "ID: " + shoppingListItem.getItemID() + ", Inhalt: " + shoppingListItem.toString());
         Log.d(LOG_TAG, "Und so die ganze Liste sieht das neue Ding  aus ");
         List<ShoppingListItem> abc = dataSource.getAllShoppingListItems();
-
 
 
         Log.d(LOG_TAG, "Folgende Einträge sind in der Datenbank vorhanden:");
