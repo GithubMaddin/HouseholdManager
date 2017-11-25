@@ -5,12 +5,16 @@
         android:id="@+id/activity_shopping_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:paddingBottom="@dimen/activity_vertical_margin"
         tools:context="de.was_wichtiges.householdmanager.shoppinglist.ShoppingList">
     <AutoCompleteTextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                          android:id="@+id/edt_search"/>
-    <ListView android:layout_width="match_parent" android:layout_height="match_parent" android:id="@+id/lst_shopping" android:layout_below="@id/edt_search"/>
+                          android:id="@+id/edt_search" android:maxLines="1" android:layout_margin="12dp"
+                          android:lines="1"
+                          android:completionThreshold="1"
+                          android:imeOptions="actionGo"
+                          android:imeActionLabel="Hinzufügen"
+                          android:singleLine="true"/>
+    <android.support.v7.widget.RecyclerView android:layout_width="match_parent" android:layout_height="match_parent"
+                                            android:id="@+id/lst_shopping" android:layout_below="@id/edt_search"/>
+
+
 </RelativeLayout>

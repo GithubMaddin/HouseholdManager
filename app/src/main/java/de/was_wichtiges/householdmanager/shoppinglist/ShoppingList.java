@@ -1,26 +1,36 @@
 
 package de.was_wichtiges.householdmanager.shoppinglist;
 
+import android.app.DialogFragment;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
+import android.widget.TextView;
 import de.was_wichtiges.householdmanager.R;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by M.Friedrich on 15.02.2017.
  */
-public class ShoppingList extends AppCompatActivity {
+public class ShoppingList extends AppCompatActivity implements ShoppingListAddDialog.ShoppingListAddDialogListener {
 
     public static final String LOG_TAG = ShoppingList.class.getSimpleName();
 
     private ShoppingListDataSource dataSource;
 
-    private ListView listShopping;
+    private ShoppingListAdapter shoppingListAdapter;
+    private RecommenderAdapter recommenderAdapter;
+
+    private RecyclerView listShopping;
+    private AutoCompleteTextView editSearch;
 
     /**
      * when activity is activated
@@ -33,20 +43,62 @@ public class ShoppingList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shopping_list);
 
-        listShopping = (ListView) findViewById(R.id.lst_shopping);
-
-        ArrayList<String> data = new ArrayList<>();
+        listShopping = (RecyclerView) findViewById(R.id.lst_shopping);
+        editSearch = (AutoCompleteTextView) findViewById(R.id.edt_search);
 
         Log.d(LOG_TAG, "Create new database object");
         dataSource = new ShoppingListDataSource(this);
         dataSource.open();
 
-        for (ShoppingListItem shoppingListItem : dataSource.getAllShoppingListItems()) {
-            data.add(shoppingListItem.getName() + " " + shoppingListItem.getQuantity() + " " + shoppingListItem.getUnit());
-        }
+        shoppingListAdapter = new ShoppingListAdapter(dataSource.getAllShoppingListItems());
+        listShopping.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        listShopping.setAdapter(shoppingListAdapter);
+        listShopping.setItemAnimator(new DefaultItemAnimator());
+        listShopping.setHasFixedSize(true);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, data);
-        listShopping.setAdapter(adapter);
+        ItemTouchHelper.Callback listShoppingCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                dataSource.deleteShoppingMemo(shoppingListAdapter.items.get(viewHolder.getAdapterPosition()));
+                shoppingListAdapter.remove(viewHolder.getAdapterPosition());
+            }
+        };
+        new ItemTouchHelper(listShoppingCallback).attachToRecyclerView(listShopping);
+
+
+        recommenderAdapter = new RecommenderAdapter();
+        editSearch.setAdapter(recommenderAdapter);
+        editSearch.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                showAddDialog((ShoppingListItem) adapterView.getItemAtPosition(i));
+                editSearch.setText("");
+            }
+        });
+        editSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if (keyEvent.getAction() == EditorInfo.IME_ACTION_GO) {
+                    showAddDialog(new ShoppingListItem(editSearch.getText().toString(), 1, "pcs", false));
+                }
+                return false;
+            }
+        });
+    }
+
+    public void showAddDialog(ShoppingListItem item) {
+        DialogFragment dialogFragment = new ShoppingListAddDialog();
+        Bundle bundle = new Bundle();
+        bundle.putString("name", item.getName());
+        bundle.putInt("quantity", item.getQuantity());
+        bundle.putString("unit", item.getUnit());
+        dialogFragment.setArguments(bundle);
+        dialogFragment.show(getFragmentManager(), "ShoppingListAddDialog");
     }
 
     /**
@@ -56,22 +108,8 @@ public class ShoppingList extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
         Log.d(LOG_TAG, "Open data source.");
         dataSource.open();
-
-
-        ShoppingListItem shoppingListItem = dataSource.createShoppingMemo("Banane", 5);
-        Log.d(LOG_TAG, "folgendermaßen sieht das neue Ding  aus " + shoppingListItem.toString());
-        Log.d(LOG_TAG, "Es wurde der folgende Eintrag in die Datenbank geschrieben:");
-        Log.d(LOG_TAG, "ID: " + shoppingListItem.getItemID() + ", Inhalt: " + shoppingListItem.toString());
-        Log.d(LOG_TAG, "Und so die ganze Liste sieht das neue Ding  aus ");
-        List<ShoppingListItem> abc = dataSource.getAllShoppingListItems();
-
-
-        Log.d(LOG_TAG, "Folgende Einträge sind in der Datenbank vorhanden:");
-
-
     }
 
     /**
@@ -86,4 +124,9 @@ public class ShoppingList extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onAdd(String product, int quantity, String unit) {
+        ShoppingListItem item = dataSource.createShoppingMemo(product, quantity, unit);
+        shoppingListAdapter.add(item, 0);
+    }
 }

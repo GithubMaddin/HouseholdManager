@@ -1,14 +1,13 @@
 package de.was_wichtiges.householdmanager.shoppinglist;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import android.content.ContentValues;
-import android.database.Cursor;
 import java.util.ArrayList;
 import java.util.List;
-
 
 
 /**
@@ -32,6 +31,7 @@ public class ShoppingListDataSource {
 
     /**
      * Constructor
+     *
      * @param context
      */
     public ShoppingListDataSource(Context context) {
@@ -58,15 +58,16 @@ public class ShoppingListDataSource {
 
     /**
      * insert new shopping List Item into database and returns shopping list item object
+     *
      * @param product
      * @param quantity
      * @return
      */
-    public ShoppingListItem createShoppingMemo(String product, int quantity) {
+    public ShoppingListItem createShoppingMemo(String product, int quantity, String unit) {
         ContentValues values = new ContentValues();
         values.put(ShoppingListDatabaseHelper.COLUMN_PRODUCT, product);
         values.put(ShoppingListDatabaseHelper.COLUMN_QUANTITY, quantity);
-        values.put(ShoppingListDatabaseHelper.COLUMN_UNIT, "kg");
+        values.put(ShoppingListDatabaseHelper.COLUMN_UNIT, unit);
 
         long insertId = database.insert(ShoppingListDatabaseHelper.TABLE_SHOPPING_LIST, null, values);
 
@@ -85,6 +86,7 @@ public class ShoppingListDataSource {
 
     /**
      * delets shoppingListItem from Database
+     *
      * @param shoppingListItem
      */
     public void deleteShoppingMemo(ShoppingListItem shoppingListItem) {
@@ -99,6 +101,7 @@ public class ShoppingListDataSource {
 
     /**
      * updates ShoppingListItem in database
+     *
      * @param id
      * @param newProduct
      * @param newQuantity
@@ -106,7 +109,7 @@ public class ShoppingListDataSource {
      * @return
      */
     public ShoppingListItem updateShoppingMemo(long id, String newProduct, int newQuantity, boolean newChecked) {
-        int intValueChecked = (newChecked)? 1 : 0;
+        int intValueChecked = (newChecked) ? 1 : 0;
 
         ContentValues values = new ContentValues();
         values.put(ShoppingListDatabaseHelper.COLUMN_PRODUCT, newProduct);
@@ -133,6 +136,7 @@ public class ShoppingListDataSource {
 
     /**
      * Converts cursor to ShoppingListItem
+     *
      * @param cursor
      * @return ShoppingListItem
      */
@@ -153,12 +157,14 @@ public class ShoppingListDataSource {
         boolean isChecked = (intValueChecked != 0);
 
         ShoppingListItem shoppingListItem = new ShoppingListItem(product, quantity, unit, isChecked);
+        shoppingListItem.setItemID(id);
 
         return shoppingListItem;
     }
 
     /**
      * Returns a list of all ShoppingListItems from the database
+     *
      * @return
      */
 
@@ -171,7 +177,7 @@ public class ShoppingListDataSource {
         cursor.moveToFirst();
         ShoppingListItem shoppingListItem;
 
-        while(!cursor.isAfterLast()) {
+        while (!cursor.isAfterLast()) {
             shoppingListItem = cursorToShoppingMemo(cursor);
             shoppingListItemList.add(shoppingListItem);
             Log.d(LOG_TAG, "ID: " + shoppingListItem.getItemID() + ", Inhalt: " + shoppingListItem.toString());

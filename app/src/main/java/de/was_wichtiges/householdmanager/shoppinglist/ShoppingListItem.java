@@ -5,16 +5,18 @@ package de.was_wichtiges.householdmanager.shoppinglist;
  */
 public class ShoppingListItem {
     public enum Unit {
-        KG("kilogram"),     //kilo
-        G("gram"),      // gram
-        PCS("pieces"),    // pieces
-        L("liter"),      // liter
-        ML("milliliter");     // milliliter
+        KG("kilogram", "kg"),     //kilo
+        G("gram", "g"),      // gram
+        PCS("pieces", "pcs"),    // pieces
+        L("liter", "l"),      // liter
+        ML("milliliter", "ml");     // milliliter
 
         private String name;
+        private String shortName;
 
-        Unit(String name) {
+        Unit(String name, String shortName) {
             this.name = name;
+            this.shortName = shortName;
         }
 
         @Override
@@ -28,7 +30,15 @@ public class ShoppingListItem {
                     return unit;
                 }
             }
-          throw new RuntimeException("Cannot find unit '"+name+"'");
+            throw new RuntimeException("Cannot find unit '" + name + "'");
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getShortName() {
+            return shortName;
         }
     }
 
@@ -54,7 +64,7 @@ public class ShoppingListItem {
         this.unit = unit;
         this.checked = checked;
 
- // Unit.getUnitFromString(unit);
+        // Unit.getUnitFromString(unit);
     }
 
     /**
