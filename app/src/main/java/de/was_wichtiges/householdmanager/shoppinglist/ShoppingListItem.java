@@ -1,5 +1,8 @@
 package de.was_wichtiges.householdmanager.shoppinglist;
 
+import de.was_wichtiges.householdmanager.Overview;
+import de.was_wichtiges.householdmanager.net.ByteLoader;
+
 /**
  * Created by M.Friedrich on 15.02.2017.
  */
@@ -171,4 +174,7 @@ public class ShoppingListItem {
         this.checked = checked;
     }
 
+    public String getImagePath() {
+        return "file://" + Overview.shoppingListItem.getAbsolutePath() + "/" + ByteLoader.fileMD5(getName());
+    }
 }

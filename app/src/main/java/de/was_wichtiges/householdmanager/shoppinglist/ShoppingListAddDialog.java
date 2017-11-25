@@ -8,7 +8,10 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.widget.*;
+import com.squareup.picasso.Picasso;
+import de.was_wichtiges.householdmanager.Overview;
 import de.was_wichtiges.householdmanager.R;
+import de.was_wichtiges.householdmanager.net.ByteLoader;
 
 /**
  * Created by jfmarten on 25.11.17.
@@ -34,7 +37,7 @@ public class ShoppingListAddDialog extends DialogFragment {
         final EditText quantity = (EditText) rl.findViewById(R.id.edt_quantity);
         quantity.setText(bundle.getInt("quantity") + "");
         ImageView image = (ImageView) rl.findViewById(R.id.img_main);
-        image.setImageResource(R.mipmap.ic_launcher);
+        Picasso.with(image.getContext()).load("file://" + Overview.shoppingListItem.getAbsolutePath() + "/" + ByteLoader.fileMD5(bundle.getString("name"))).into(image);
         builder.setTitle("Zur Liste hinzufügen");
         builder.setPositiveButton("Hinzufügen", new DialogInterface.OnClickListener() {
             @Override

@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import com.squareup.picasso.Picasso;
 import de.was_wichtiges.householdmanager.R;
 
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ public class RecommenderAdapter extends BaseAdapter implements Filterable {
         ShoppingListItem item = (ShoppingListItem) getItem(i);
         rl = (RelativeLayout) LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_shopping_list_search, viewGroup, false);
         ((TextView) rl.findViewById(R.id.txt_name)).setText(item.getName());
-        ((ImageView) rl.findViewById(R.id.img_main)).setImageResource(R.mipmap.ic_launcher);
+        Picasso.with(viewGroup.getContext()).load(item.getImagePath()).into((ImageView) rl.findViewById(R.id.img_main));
         return rl;
     }
 
