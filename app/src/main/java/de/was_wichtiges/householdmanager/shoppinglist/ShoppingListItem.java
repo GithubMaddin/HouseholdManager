@@ -6,7 +6,7 @@ import de.was_wichtiges.householdmanager.net.ByteLoader;
 /**
  * Created by M.Friedrich on 15.02.2017.
  */
-public class ShoppingListItem {
+public class ShoppingListItem implements RecommenderTree.Item<ShoppingListItem> {
     public enum Unit {
         KG("kilogram", "kg"),     //kilo
         G("gram", "g"),      // gram
@@ -176,5 +176,10 @@ public class ShoppingListItem {
 
     public String getImagePath() {
         return "file://" + Overview.shoppingListItem.getAbsolutePath() + "/" + ByteLoader.fileMD5(getName());
+    }
+
+    @Override
+    public int compareTo(ShoppingListItem shoppingListItem) {
+        return this.getName().compareToIgnoreCase(shoppingListItem.getName());
     }
 }
