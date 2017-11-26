@@ -22,6 +22,7 @@ public class ShoppingListItem implements RecommenderTree.Item<ShoppingListItem> 
             this.shortName = shortName;
         }
 
+
         @Override
         public String toString() {
             return name;
@@ -50,6 +51,9 @@ public class ShoppingListItem implements RecommenderTree.Item<ShoppingListItem> 
     private int quantity;
     private String unit;
     private boolean checked;
+
+
+    private int rank;
 
     private String changedBy;
     private int lastChange;
@@ -156,6 +160,8 @@ public class ShoppingListItem implements RecommenderTree.Item<ShoppingListItem> 
         this.unit = unit;
     }
 
+
+
     /**
      * Returns true if item is checked
      *
@@ -178,8 +184,20 @@ public class ShoppingListItem implements RecommenderTree.Item<ShoppingListItem> 
         return "file://" + Overview.shoppingListItem.getAbsolutePath() + "/" + ByteLoader.fileMD5(getName());
     }
 
+    public int getRank() {
+        return rank;
+    }
+
+    public void setRank(int rank) {
+        this.rank = rank;
+    }
+
+    public void increseRank(){
+        this.rank +=1;
+    }
+
     @Override
     public int compareTo(ShoppingListItem shoppingListItem) {
-        return this.getName().compareToIgnoreCase(shoppingListItem.getName());
+        return(this.rank - shoppingListItem.rank);
     }
 }
