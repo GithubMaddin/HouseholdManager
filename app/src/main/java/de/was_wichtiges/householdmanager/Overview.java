@@ -3,6 +3,7 @@ package de.was_wichtiges.householdmanager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import de.was_wichtiges.householdmanager.net.ByteLoader;
@@ -45,16 +46,36 @@ public class Overview extends AppCompatActivity {
 
 
         RecommenderTree<ShoppingListItem> recTree = new RecommenderTree<>(5);
-        recTree.addItem(new ShoppingListItem("Bananenbrot", 3, "kg", false));
-        recTree.addItem(new ShoppingListItem("Banane", 3, "kg", false));
-        recTree.addItem(new ShoppingListItem("Bakterien", 3, "kg", false));
+        recTree.addItem(new ShoppingListItem("aabb", 3, "kg", false));
+        recTree.addItem(new ShoppingListItem("aacc", 3, "kg", false));
+        recTree.addItem(new ShoppingListItem("aabba", 3, "kg", false));
+        recTree.addItem(new ShoppingListItem("aabbe", 3, "kg", false));
+        recTree.addItem(new ShoppingListItem("aa", 3, "kg", false));
 
-        recTree.addItem(new ShoppingListItem("Apfel", 3, "kg", false));
-        recTree.addItem(new ShoppingListItem("Ban", 3, "kg", false));
-        recTree.addItem(new ShoppingListItem("Merle", 3, "kg", false));
-        recTree.addItem(new ShoppingListItem("Merle", 3, "kg", false));
-        recTree.addItem(new ShoppingListItem("Banane", 3, "kg", false));
         recTree.debug();
+        Log.i("Listen"," ");
+        for (ShoppingListItem curItem : recTree.searchRecommendedItems("aab") ){
+            Log.i("Listenitem",curItem.getName());
+        };
+        /*recTree.addItem(new ShoppingListItem("aa", 3, "kg", false));
+        recTree.addItem(new ShoppingListItem("aabb", 3, "kg", false));
+        recTree.addItem(new ShoppingListItem("aacc", 3, "kg", false));
+        recTree.addItem(new ShoppingListItem("aabbdd", 3, "kg", false));
+        recTree.addItem(new ShoppingListItem("aabbee", 3, "kg", false));
+        recTree.addItem(new ShoppingListItem("ccasdfsadf", 3, "kg", false));
+        recTree.addItem(new ShoppingListItem("aabbef", 3, "kg", false));
+        */
+        //recTree
+       // recTree.addItem(new ShoppingListItem("Bananenbrot", 3, "kg", false));
+        //recTree.addItem(new ShoppingListItem("Banane", 3, "kg", false));
+      //  recTree.addItem(new ShoppingListItem("Bakterien", 3, "kg", false));
+
+        //recTree.addItem(new ShoppingListItem("Apfel", 3, "kg", false));
+        //recTree.addItem(new ShoppingListItem("Ban", 3, "kg", false));
+        //recTree.addItem(new ShoppingListItem("Merle", 3, "kg", false));
+        //recTree.addItem(new ShoppingListItem("Merle", 3, "kg", false));
+        //recTree.addItem(new ShoppingListItem("Banane", 3, "kg", false));
+
 
 
 
