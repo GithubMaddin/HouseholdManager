@@ -5,6 +5,7 @@ import android.app.DialogFragment;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -59,8 +60,10 @@ public class ShoppingList extends AppCompatActivity implements ShoppingListAddDi
         shoppingListAdapter = new ShoppingListAdapter(dataSource.getAllShoppingListItems());
         listShopping.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         listShopping.setAdapter(shoppingListAdapter);
+        listShopping.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
         listShopping.setItemAnimator(new DefaultItemAnimator());
         listShopping.setHasFixedSize(true);
+
 
         ItemTouchHelper.Callback listShoppingCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
             @Override

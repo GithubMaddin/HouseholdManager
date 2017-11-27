@@ -42,8 +42,8 @@ public class Overview extends AppCompatActivity {
             }
         });
 
-        ByteLoader.download("http://universal.was-wichtiges.de/img/" + ByteLoader.fileMD5("Banane"), shoppingListItem.getAbsolutePath() + "/" + ByteLoader.fileMD5("Banane"), true);
-        ByteLoader.download("http://universal.was-wichtiges.de/img/" + ByteLoader.fileMD5("Apfel"), shoppingListItem.getAbsolutePath() + "/" + ByteLoader.fileMD5("Apfel"), true);
+        ByteLoader.download("http://universal.was-wichtiges.de/img/" + ByteLoader.fileMD5("Banane"), shoppingListItem.getAbsolutePath() + "/" + ByteLoader.fileMD5("Banane")+".jpg", false);
+        ByteLoader.download("http://universal.was-wichtiges.de/img/" + ByteLoader.fileMD5("Apfel"), shoppingListItem.getAbsolutePath() + "/" + ByteLoader.fileMD5("Apfel")+".jpg", false);
 
 
         RecommenderTree<ShoppingListItem> recTree = new RecommenderTree<>(5);

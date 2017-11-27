@@ -20,26 +20,25 @@ public class RecommenderTree<E extends RecommenderTree.Item<E>> {
 
     public RecommenderTree(int numberRankedItems) {
         root = new Node<E>(null, "");
-        this.numberRankedItems =  numberRankedItems;
+        this.numberRankedItems = numberRankedItems;
     }
-
 
 
     /**
      * Function that updates ranking upwards
+     *
      * @param insertNode
      */
-    private void updateRankingList(Node<E> insertNode){
+    private void updateRankingList(Node<E> insertNode) {
         Node<E> currentNode = insertNode;
-        while (currentNode.parent != null){
-           Node<E> parentNode = currentNode.parent;
-           // case ranking liste does not contain node and is not completely filled
-           if (parentNode.recommendedChildren.size()<numberRankedItems){
-               if (!parentNode.recommendedChildren.contains(insertNode.item)){
-                   parentNode.recommendedChildren.add(insertNode.item);
-               }
-           }
-           else { // list is filled
+        while (currentNode.parent != null) {
+            Node<E> parentNode = currentNode.parent;
+            // case ranking liste does not contain node and is not completely filled
+            if (parentNode.recommendedChildren.size() < numberRankedItems) {
+                if (!parentNode.recommendedChildren.contains(insertNode.item)) {
+                    parentNode.recommendedChildren.add(insertNode.item);
+                }
+            } else { // list is filled
                 if (Collections.min(parentNode.recommendedChildren).compareTo(insertNode.item) < 0) {
                     // rank is higher
                     parentNode.recommendedChildren.add(insertNode.item);
@@ -56,11 +55,7 @@ public class RecommenderTree<E extends RecommenderTree.Item<E>> {
     }
 
 
-
-
-
-
-    private Node<E> splitNode(Node<E> oldNode, E item, int splitCharPos, String remainingSearchWord){ // splitCharPos = index of last char of new guiding word
+    private Node<E> splitNode(Node<E> oldNode, E item, int splitCharPos, String remainingSearchWord) { // splitCharPos = index of last char of new guiding word
         // identifify new searchword
         String newGuidingCharcters = oldNode.guidingCharacters.substring(0, splitCharPos);
         // delete old node from parents list
@@ -76,13 +71,13 @@ public class RecommenderTree<E extends RecommenderTree.Item<E>> {
         // add old node
         newNode.childrenNodes.add(oldNode);
         // add item to new Node
-        if(remainingSearchWord == "") {
-            Log.i("Fall","1");
+        if (remainingSearchWord == "") {
+            Log.i("Fall", "1");
             Node<E> newItemNode = new Node<E>(newNode, item);
             newNode.childrenNodes.add(newItemNode);
             return newItemNode;
         } else {
-            Log.i("Fall","2");
+            Log.i("Fall", "2");
             Node<E> newSubGuidingNode = new Node<E>(newNode, remainingSearchWord);
             //newSubGuidingNode.recommendedChildren = oldNode.recommendedChildren;
             newNode.childrenNodes.add(newSubGuidingNode);
@@ -95,32 +90,34 @@ public class RecommenderTree<E extends RecommenderTree.Item<E>> {
 
     /**
      * Return list of recommended items for inserted search word
+     *
      * @param searchword search word
      * @return list of recommended items, if searchword not included returns empty list
      */
-    public List<E> searchRecommendedItems(String searchword){
+    public List<E> searchRecommendedItems(String searchword) {
         return searchRecommendedItems(root, searchword);
     }
 
     /**
-     *  Help function for recursive call of function
+     * Help function for recursive call of function
+     *
      * @param currentNode currend node
-     * @param searchword searchword
+     * @param searchword  searchword
      * @return list of recommended items, if searchword not included returns empty list
      */
-    private List<E> searchRecommendedItems(Node<E>currentNode , String searchword){
+    private List<E> searchRecommendedItems(Node<E> currentNode, String searchword) {
 
         // identify item that is not the root node and does not match with the first letter
         if ((currentNode.guidingCharacters != null)
                 && (currentNode.guidingCharacters.length() != 0)
-                && (currentNode.guidingCharacters.charAt(0) != searchword.charAt(0))){
+                && (currentNode.guidingCharacters.charAt(0) != searchword.charAt(0))) {
             return null;
         } else {
             // check if the remaining search word is the full or part of the current guidance node
-            for (int i = 0; i < currentNode.guidingCharacters.length(); i++){
-                if(searchword.length() == 0){
+            for (int i = 0; i < currentNode.guidingCharacters.length(); i++) {
+                if (searchword.length() == 0) {
                     return currentNode.recommendedChildren;
-                } else if (currentNode.guidingCharacters.charAt(i) == searchword.charAt(0)){
+                } else if (currentNode.guidingCharacters.charAt(i) == searchword.charAt(0)) {
                     // get through node step by step and reduce search word
                     searchword = searchword.substring(1);
                 }
@@ -129,30 +126,24 @@ public class RecommenderTree<E extends RecommenderTree.Item<E>> {
                 return currentNode.recommendedChildren;
             }
         }
-            // if there is a remaining part of the searchword check the children recursively:
-                for (Node<E> nextNode : currentNode.childrenNodes) {
-                    if (nextNode.type == Node.Type.GUIDINGNODE) {
-                        List<E> resultOfNode = searchRecommendedItems(nextNode, searchword);
-                        if (resultOfNode != null){
-                            // only return result in case one of the children found a match
-                            return resultOfNode;
-                        }
-                    }
+        // if there is a remaining part of the searchword check the children recursively:
+        for (Node<E> nextNode : currentNode.childrenNodes) {
+            if (nextNode.type == Node.Type.GUIDINGNODE) {
+                List<E> resultOfNode = searchRecommendedItems(nextNode, searchword);
+                if (resultOfNode != null) {
+                    // only return result in case one of the children found a match
+                    return resultOfNode;
                 }
+            }
+        }
         // otherwise (if no matching item was found) return an empty list
         return new ArrayList<E>();
     }
 
 
-
-
-
-
-
-
     public boolean checkNode(Node<E> currentNode, String searchWord, E item) {
 
-        if (currentNode.parent != null && (searchWord.charAt(0) != currentNode.guidingCharacters.charAt(0))){
+        if (currentNode.parent != null && (searchWord.charAt(0) != currentNode.guidingCharacters.charAt(0))) {
             return false;
         } else {
             int length = Math.min(currentNode.guidingCharacters.length(), searchWord.length());
@@ -162,8 +153,8 @@ public class RecommenderTree<E extends RecommenderTree.Item<E>> {
                 } else {
                     // different character
                     // split required
-                    updateRankingList(splitNode(currentNode, item, i , searchWord));
-                    Log.i("Split","Wurde gesplittet 2");
+                    updateRankingList(splitNode(currentNode, item, i, searchWord));
+                    Log.i("Split", "Wurde gesplittet 2");
                     return true;
                 }
             }
@@ -174,24 +165,24 @@ public class RecommenderTree<E extends RecommenderTree.Item<E>> {
                 updateRankingList(newItemNode);
                 return true;
             } // case: new shorter word
-                else if (searchWord.length() == 0) {
+            else if (searchWord.length() == 0) {
                 updateRankingList(splitNode(currentNode, item, length, ""));
-                Log.i("Split","Wurde gesplittet");
+                Log.i("Split", "Wurde gesplittet");
                 return true;
 
             } else {
                 // Seachword > 0 => check if any of the children is suitable => rekursive call
                 boolean newChildRequired = true;
-                for (Node<E> nextNode : currentNode.childrenNodes){
-                    if(nextNode.type== Node.Type.GUIDINGNODE){
-                        if (checkNode(nextNode,searchWord,item)) {
+                for (Node<E> nextNode : currentNode.childrenNodes) {
+                    if (nextNode.type == Node.Type.GUIDINGNODE) {
+                        if (checkNode(nextNode, searchWord, item)) {
                             newChildRequired = false;
                         }
                     }
                 }
                 // if none of it is suitable => create and add new child node
-                if (newChildRequired){
-                    addNewChildNode(currentNode,item, searchWord);
+                if (newChildRequired) {
+                    addNewChildNode(currentNode, item, searchWord);
                     return true;
                 } else {
                     return true;
@@ -202,12 +193,13 @@ public class RecommenderTree<E extends RecommenderTree.Item<E>> {
 
     /**
      * Help function - Adds sub-guidance node
-     * @param currentNode node the new node should be attached to
-     * @param item item that should be added
+     *
+     * @param currentNode         node the new node should be attached to
+     * @param item                item that should be added
      * @param remainingSearchWord remaining search word
      * @return
      */
-    private Node<E> addNewChildNode(Node<E> currentNode, E item, String remainingSearchWord){
+    private Node<E> addNewChildNode(Node<E> currentNode, E item, String remainingSearchWord) {
         Node<E> newGuidanceNode = new Node<E>(currentNode, remainingSearchWord);
         Node<E> newItemNode = new Node<E>(newGuidanceNode, item);
         newGuidanceNode.childrenNodes.add(newItemNode);
@@ -223,9 +215,10 @@ public class RecommenderTree<E extends RecommenderTree.Item<E>> {
      *
      * @param <E> item
      */
-    private static class Node<E extends Item<E>>  {
+    private static class Node<E extends Item<E>> {
         private List<Node<E>> childrenNodes;
         private Node<E> parent;
+
         public enum Type {
             GUIDINGNODE, ITEM;
         }
@@ -260,24 +253,22 @@ public class RecommenderTree<E extends RecommenderTree.Item<E>> {
         }
 
 
-
         public void debug(String placeholder) {
             String recommenderNodes = "(";
-            if (this.recommendedChildren.size() != 0){
-                for (Item<E> item: this.recommendedChildren){
+            if (this.recommendedChildren.size() != 0) {
+                for (Item<E> item : this.recommendedChildren) {
                     recommenderNodes = recommenderNodes + item.getName() + ", ";
                 }
             }
 
-            recommenderNodes +=")";
-            Log.i("Knoten:", placeholder + (type==Type.ITEM?"I: '" + item.getName() + "'" : "G: '" + guidingCharacters+"'" + recommenderNodes) + "parent:" + (parent!=null?parent.guidingCharacters: "null"));
+            recommenderNodes += ")";
+            Log.i("Knoten:", placeholder + (type == Type.ITEM ? "I: '" + item.getName() + "'" : "G: '" + guidingCharacters + "'" + recommenderNodes) + "parent:" + (parent != null ? parent.guidingCharacters : "null"));
             for (Node<E> node : childrenNodes) {
                 node.debug(placeholder + "  ");
             }
 
 
         }
-
 
 
     }
