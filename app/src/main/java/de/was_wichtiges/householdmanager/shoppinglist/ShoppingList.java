@@ -77,7 +77,10 @@ public class ShoppingList extends AppCompatActivity implements ShoppingListAddDi
         new ItemTouchHelper(listShoppingCallback).attachToRecyclerView(listShopping);
 
         recommenderTree = new RecommenderTree<>(5);
-        recommenderTree.addItem(new ShoppingListItem("Bananenbaum", 1, "kg", false));
+        recommenderTree.addItem(new ShoppingListItem("aba", 1, "kg", false));
+        recommenderTree.addItem(new ShoppingListItem("bb", 1, "kg", false));
+        recommenderTree.addItem(new ShoppingListItem("ab", 1, "kg", false));
+        /*recommenderTree.addItem(new ShoppingListItem("Bananenbaum", 1, "kg", false));
         recommenderTree.addItem(new ShoppingListItem("Banane", 1, "kg", false));
         recommenderTree.addItem(new ShoppingListItem("Baum", 1, "kg", false));
         recommenderTree.addItem(new ShoppingListItem("Bambus", 1, "kg", false));
@@ -88,7 +91,7 @@ public class ShoppingList extends AppCompatActivity implements ShoppingListAddDi
         recommenderTree.addItem(new ShoppingListItem("Apfelkuchen", 1, "kg", false));
         recommenderTree.addItem(new ShoppingListItem("Apfelkuchendecke", 1, "kg", false));
         recommenderTree.addItem(new ShoppingListItem("Apfelkuchendeckenecke", 1, "kg", false));
-
+*/
         recommenderTree.debug();
 
         Log.i("Listen", " ");

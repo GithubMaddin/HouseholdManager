@@ -52,14 +52,14 @@ public class RecommenderTree<E extends RecommenderTree.Item<E>> {
 
     public void addItem(E item) {
         String searchWord = item.getName().toLowerCase();
-        checkNode(root, searchWord, item);
+        updateRankingList(addNode(root, searchWord, item));
     }
 
 
 
 
 
-
+/*
     private Node<E> splitNode(Node<E> oldNode, E item, int splitCharPos, String remainingSearchWord){ // splitCharPos = index of last char of new guiding word
         // identifify new searchword
         String newGuidingCharcters = oldNode.guidingCharacters.substring(0, splitCharPos);
@@ -92,23 +92,16 @@ public class RecommenderTree<E extends RecommenderTree.Item<E>> {
             return newItemNode;
         }
     }
+*/
 
-    /**
-     * Return list of recommended items for inserted search word
-     * @param searchword search word
-     * @return list of recommended items, if searchword not included returns empty list
-     */
-    public List<E> searchRecommendedItems(String searchword){
-        return searchRecommendedItems(root, searchword);
+
+
+    public void addNode(E item) {
+        String searchWord = item.getName().toLowerCase();
+        addNode(root, searchWord, item);
     }
 
-    /**
-     *  Help function for recursive call of function
-     * @param currentNode currend node
-     * @param searchword searchword
-     * @return list of recommended items, if searchword not included returns empty list
-     */
-    private List<E> searchRecommendedItems(Node<E>currentNode , String searchword){
+    private Node<E> addNode(Node<E>currentNode , String searchword, E item){
 
         // identify item that is not the root node and does not match with the first letter
         if ((currentNode.guidingCharacters != null)
@@ -119,37 +112,99 @@ public class RecommenderTree<E extends RecommenderTree.Item<E>> {
             // check if the remaining search word is the full or part of the current guidance node
             for (int i = 0; i < currentNode.guidingCharacters.length(); i++){
                 if(searchword.length() == 0){
-                    return currentNode.recommendedChildren;
+                    // split word --> case A
+                    return splitNodePartialGuidingWord(currentNode,item,i);
                 } else if (currentNode.guidingCharacters.charAt(i) == searchword.charAt(0)){
                     // get through node step by step and reduce search word
                     searchword = searchword.substring(1);
+                } else {
+                    // character differ => split word --> case
+                    return splitNodeDifferingWord(currentNode, item, i, searchword);
                 }
             }
             if (searchword.length() == 0) {
-                return currentNode.recommendedChildren;
+                // case searchword completle match current guiding node: add new item Node
+                return addNewItemNode(currentNode, item);
+                //TODO: identify weather item already exist
             }
         }
-            // if there is a remaining part of the searchword check the children recursively:
-                for (Node<E> nextNode : currentNode.childrenNodes) {
-                    if (nextNode.type == Node.Type.GUIDINGNODE) {
-                        List<E> resultOfNode = searchRecommendedItems(nextNode, searchword);
-                        if (resultOfNode != null){
-                            // only return result in case one of the children found a match
-                            return resultOfNode;
-                        }
-                    }
+        // if there is a remaining part of the searchword check the children recursively:
+        for (Node<E> nextNode : currentNode.childrenNodes) {
+            if (nextNode.type == Node.Type.GUIDINGNODE) {
+                Node<E> resultOfNode = addNode(nextNode, searchword, item);
+                if (resultOfNode != null){
+                    // only return result in case one of the children found a match
+                    return resultOfNode;
                 }
+            }
+        }
         // otherwise (if no matching item was found) return an empty list
-        return new ArrayList<E>();
+        return addNewChildGuidingAndItemNode(currentNode, item, searchword);
+    }
+
+    /**
+     * Help function - Adds sub-guidance node and item node
+     * @param currentNode node the new node should be attached to
+     * @param item item that should be added
+     * @param remainingSearchWord remaining search word
+     * @return
+     */
+    private Node<E> addNewChildGuidingAndItemNode(Node<E> currentNode, E item, String remainingSearchWord){
+        Node<E> newGuidanceNode = new Node<E>(currentNode, remainingSearchWord);
+        Node<E> newItemNode = new Node<E>(newGuidanceNode, item);
+        newGuidanceNode.childrenNodes.add(newItemNode);
+        currentNode.childrenNodes.add(newGuidanceNode);
+        return newItemNode;
+    }
+
+    /**
+     * Help function - Adds item node to current guidance node
+     * @param currentNode node the new node should be attached to
+     * @param item item that should be added
+     * @return
+     */
+    private Node<E> addNewItemNode(Node<E> currentNode, E item){
+        Node<E> newItemNode = new Node<E>(currentNode, item);
+        currentNode.childrenNodes.add(newItemNode);
+        return newItemNode;
     }
 
 
 
 
+    private Node<E> splitNodeDifferingWord(Node<E> currentNode, E item, int splitCharIndex, String remainingSearchword){
+        return addNewChildGuidingAndItemNode(splitNode(currentNode, splitCharIndex),item,remainingSearchword);
+    }
+
+    private Node<E> splitNodePartialGuidingWord(Node<E> currentNode, E item, int splitCharIndex){
+        return addNewItemNode(splitNode(currentNode,splitCharIndex),item);
+    }
+
+    private Node<E> splitNode(Node<E> currentNode, int splitCharIndex){
+        // create one new guiding node nearly identical to the current node
+        // - first part of the old guiding word ending one character before the splitCarIndex
+        Node<E> newParentGuidingNode = new Node<E>(currentNode.parent, currentNode.guidingCharacters.substring(0, splitCharIndex));
+        // - same recommended children
+        newParentGuidingNode.recommendedChildren = currentNode.recommendedChildren;
+        // - add current node as new child of new node
+        newParentGuidingNode.childrenNodes.add(currentNode);
+        // return old and add new guiding node to parents
+        newParentGuidingNode.parent.childrenNodes.add(newParentGuidingNode);
+        newParentGuidingNode.parent.childrenNodes.remove(currentNode);
+
+        // adapte old node
+        // - change name last part of old guiding word
+        currentNode.guidingCharacters = currentNode.guidingCharacters.substring(splitCharIndex);
+        // - change parent to new guiding parent
+        currentNode.parent = newParentGuidingNode;
 
 
+        return newParentGuidingNode;
+    }
 
 
+    /****************************************************************************************/
+/*
     public boolean checkNode(Node<E> currentNode, String searchWord, E item) {
 
         if (currentNode.parent != null && (searchWord.charAt(0) != currentNode.guidingCharacters.charAt(0))){
@@ -191,7 +246,7 @@ public class RecommenderTree<E extends RecommenderTree.Item<E>> {
                 }
                 // if none of it is suitable => create and add new child node
                 if (newChildRequired){
-                    addNewChildNode(currentNode,item, searchWord);
+                    addNewChildGuidingAndItemNode(currentNode,item, searchWord);
                     return true;
                 } else {
                     return true;
@@ -199,23 +254,60 @@ public class RecommenderTree<E extends RecommenderTree.Item<E>> {
             }
         }
     }
+*/
+
+
 
     /**
-     * Help function - Adds sub-guidance node
-     * @param currentNode node the new node should be attached to
-     * @param item item that should be added
-     * @param remainingSearchWord remaining search word
-     * @return
+     * Return list of recommended items for inserted search word
+     * @param searchword search word
+     * @return list of recommended items, if searchword not included returns empty list
      */
-    private Node<E> addNewChildNode(Node<E> currentNode, E item, String remainingSearchWord){
-        Node<E> newGuidanceNode = new Node<E>(currentNode, remainingSearchWord);
-        Node<E> newItemNode = new Node<E>(newGuidanceNode, item);
-        newGuidanceNode.childrenNodes.add(newItemNode);
-        currentNode.childrenNodes.add(newGuidanceNode);
-        // recursive update of ranking
-        updateRankingList(newItemNode);
-        return newItemNode;
+    public List<E> searchRecommendedItems(String searchword){
+        return searchRecommendedItems(root, searchword);
     }
+
+    /**
+     *  Help function for recursive call of function
+     * @param currentNode currend node
+     * @param searchword searchword
+     * @return list of recommended items, if searchword not included returns empty list
+     */
+    private List<E> searchRecommendedItems(Node<E>currentNode , String searchword){
+
+        // identify item that is not the root node and does not match with the first letter
+        if ((currentNode.guidingCharacters != null)
+                && (currentNode.guidingCharacters.length() != 0)
+                && (currentNode.guidingCharacters.charAt(0) != searchword.charAt(0))){
+            return null;
+        } else {
+            // check if the remaining search word is the full or part of the current guidance node
+            for (int i = 0; i < currentNode.guidingCharacters.length(); i++){
+                if(searchword.length() == 0){
+                    return currentNode.recommendedChildren;
+                } else if (currentNode.guidingCharacters.charAt(i) == searchword.charAt(0)){
+                    // get through node step by step and reduce search word
+                    searchword = searchword.substring(1);
+                }
+            }
+            if (searchword.length() == 0) {
+                return currentNode.recommendedChildren;
+            }
+        }
+        // if there is a remaining part of the searchword check the children recursively:
+        for (Node<E> nextNode : currentNode.childrenNodes) {
+            if (nextNode.type == Node.Type.GUIDINGNODE) {
+                List<E> resultOfNode = searchRecommendedItems(nextNode, searchword);
+                if (resultOfNode != null){
+                    // only return result in case one of the children found a match
+                    return resultOfNode;
+                }
+            }
+        }
+        // otherwise (if no matching item was found) return an empty list
+        return new ArrayList<E>();
+    }
+
 
 
     /**
