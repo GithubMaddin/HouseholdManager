@@ -23,6 +23,8 @@ public class RecommenderTree<E extends RecommenderTree.Item<E>> {
         this.numberRankedItems =  numberRankedItems;
     }
 
+
+
     /**
      * Function that updates ranking upwards
      * @param insertNode
@@ -44,7 +46,6 @@ public class RecommenderTree<E extends RecommenderTree.Item<E>> {
                     parentNode.recommendedChildren.remove(Collections.min(parentNode.recommendedChildren));
                 }
             }
-
             currentNode = parentNode;
         }
     }
