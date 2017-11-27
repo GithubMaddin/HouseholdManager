@@ -17,6 +17,8 @@
         </activity>
         <activity android:name=".shoppinglist.ShoppingList">
         </activity>
+        <activity android:name=".Recommender">
+        </activity>
     </application>
 
 </manifest>

@@ -17,6 +17,10 @@ import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
 import de.was_wichtiges.householdmanager.R;
 
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 /**
  * Created by M.Friedrich on 15.02.2017.
  */
@@ -77,6 +81,7 @@ public class ShoppingList extends AppCompatActivity implements ShoppingListAddDi
         recommenderTree.addItem(new ShoppingListItem("Banane", 1, "kg", false));
         recommenderTree.addItem(new ShoppingListItem("Baum", 1, "kg", false));
         recommenderTree.addItem(new ShoppingListItem("Bambus", 1, "kg", false));
+        recommenderTree.debug();
         recommenderTree.addItem(new ShoppingListItem("Bambusstücke", 1, "kg", false));
         recommenderTree.addItem(new ShoppingListItem("Buchsbaum", 1, "kg", false));
         recommenderTree.addItem(new ShoppingListItem("Apfel", 1, "kg", false));
@@ -85,6 +90,18 @@ public class ShoppingList extends AppCompatActivity implements ShoppingListAddDi
         recommenderTree.addItem(new ShoppingListItem("Apfelkuchendeckenecke", 1, "kg", false));
 
         recommenderTree.debug();
+
+        Log.i("Listen", " ");
+        List<ShoppingListItem> abc = recommenderTree.searchRecommendedItems("b");
+        Collections.sort(abc, new Comparator<ShoppingListItem>() {
+            @Override
+            public int compare(ShoppingListItem shoppingListItem, ShoppingListItem t1) {
+                return -shoppingListItem.compareTo(t1);
+            }
+        });
+        for (ShoppingListItem curItem : abc) {
+            Log.i("Listenitem", curItem.getName());
+        }
 
         recommenderAdapter = new RecommenderAdapter(recommenderTree);
         editSearch.setAdapter(recommenderAdapter);

@@ -74,6 +74,11 @@ public class ShoppingListItem implements RecommenderTree.Item<ShoppingListItem> 
         // Unit.getUnitFromString(unit);
     }
 
+    public ShoppingListItem(String name, int quantity, String unit, boolean checked, int rank) {
+        this(name, quantity, unit, checked);
+        this.rank = rank;
+    }
+
     /**
      * to String
      *

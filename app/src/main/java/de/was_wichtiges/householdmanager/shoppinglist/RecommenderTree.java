@@ -23,6 +23,10 @@ public class RecommenderTree<E extends RecommenderTree.Item<E>> {
         this.numberRankedItems =  numberRankedItems;
     }
 
+    /**
+     * Function that updates ranking upwards
+     * @param insertNode
+     */
     private void updateRankingList(Node<E> insertNode){
         Node<E> currentNode = insertNode;
         while (currentNode.parent != null){
@@ -35,10 +39,10 @@ public class RecommenderTree<E extends RecommenderTree.Item<E>> {
            }
            else { // list is filled
                 if (Collections.min(parentNode.recommendedChildren).compareTo(insertNode.item) < 0) {
-                    // rank is höher
+                    // rank is higher
                     parentNode.recommendedChildren.add(insertNode.item);
                     parentNode.recommendedChildren.remove(Collections.min(parentNode.recommendedChildren));
-                }else { }
+                }
             }
 
             currentNode = parentNode;
@@ -104,27 +108,42 @@ public class RecommenderTree<E extends RecommenderTree.Item<E>> {
      * @return list of recommended items, if searchword not included returns empty list
      */
     private List<E> searchRecommendedItems(Node<E>currentNode , String searchword){
-        if (currentNode.guidingCharacters != null){
+
+        // identify item that is not the root node and does not match with the first letter
+        if ((currentNode.guidingCharacters != null)
+                && (currentNode.guidingCharacters.length() != 0)
+                && (currentNode.guidingCharacters.charAt(0) != searchword.charAt(0))){
+            return null;
+        } else {
+            // check if the remaining search word is the full or part of the current guidance node
             for (int i = 0; i < currentNode.guidingCharacters.length(); i++){
                 if(searchword.length() == 0){
-                    // case: searchworld is part of currend guidance node
                     return currentNode.recommendedChildren;
                 } else if (currentNode.guidingCharacters.charAt(i) == searchword.charAt(0)){
                     // get through node step by step and reduce search word
                     searchword = searchword.substring(1);
                 }
             }
-            if (searchword.length() == 0){
-                //case: searchword commpletele matches guidance node
+            if (searchword.length() == 0) {
                 return currentNode.recommendedChildren;
-            } else {
-                for (Node<E> nextNode : currentNode.childrenNodes) {
-                    return searchRecommendedItems(nextNode, searchword);
-                }
             }
         }
+            // if there is a remaining part of the searchword check the children recursively:
+                for (Node<E> nextNode : currentNode.childrenNodes) {
+                    if (nextNode.type == Node.Type.GUIDINGNODE) {
+                        List<E> resultOfNode = searchRecommendedItems(nextNode, searchword);
+                        if (resultOfNode != null){
+                            // only return result in case one of the children found a match
+                            return resultOfNode;
+                        }
+                    }
+                }
+        // otherwise (if no matching item was found) return an empty list
         return new ArrayList<E>();
     }
+
+
+
 
 
 
@@ -166,7 +185,6 @@ public class RecommenderTree<E extends RecommenderTree.Item<E>> {
                     if(nextNode.type== Node.Type.GUIDINGNODE){
                         if (checkNode(nextNode,searchWord,item)) {
                             newChildRequired = false;
-                            break;
                         }
                     }
                 }
@@ -174,10 +192,11 @@ public class RecommenderTree<E extends RecommenderTree.Item<E>> {
                 if (newChildRequired){
                     addNewChildNode(currentNode,item, searchWord);
                     return true;
+                } else {
+                    return true;
                 }
             }
         }
-    return false;
     }
 
     /**
