@@ -13,6 +13,8 @@ import de.was_wichtiges.householdmanager.Overview;
 import de.was_wichtiges.householdmanager.R;
 import de.was_wichtiges.householdmanager.net.ByteLoader;
 
+import java.io.File;
+
 /**
  * Created by jfmarten on 25.11.17.
  */
@@ -37,7 +39,10 @@ public class ShoppingListAddDialog extends DialogFragment {
         final EditText quantity = (EditText) rl.findViewById(R.id.edt_quantity);
         quantity.setText(bundle.getInt("quantity") + "");
         ImageView image = (ImageView) rl.findViewById(R.id.img_main);
-        Picasso.with(image.getContext()).load("file://" + Overview.shoppingListItem.getAbsolutePath() + "/" + ByteLoader.fileMD5(bundle.getString("name"))).into(image);
+        if (new File("file://" + Overview.shoppingListItem.getAbsolutePath() + "/" + ByteLoader.fileMD5(bundle.getString("name")) + ".jpg").exists())
+            Picasso.with(image.getContext()).load("file://" + Overview.shoppingListItem.getAbsolutePath() + "/" + ByteLoader.fileMD5(bundle.getString("name")) + ".jpg").into(image);
+        else
+            image.setImageResource(R.drawable.ic_broken_image_gray_24dp);
         builder.setTitle("Zur Liste hinzufügen");
         builder.setPositiveButton("Hinzufügen", new DialogInterface.OnClickListener() {
             @Override

@@ -1,7 +1,6 @@
 package de.was_wichtiges.householdmanager.shoppinglist;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +9,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import de.was_wichtiges.householdmanager.R;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -33,7 +33,10 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
         ShoppingListItem item = items.get(position);
         holder.name.setText(item.getName());
         holder.quantity.setText(item.getQuantity() + " " + item.getUnit());
-        Picasso.with(holder.itemView.getContext()).load(item.getImagePath()).into(holder.image);
+        if (new File(item.getImagePath()).exists())
+            Picasso.with(holder.itemView.getContext()).load(item.getImagePath()).into(holder.image);
+        else
+            holder.image.setImageResource(R.drawable.ic_broken_image_gray_24dp);
         holder.itemView.setTag(item);
         if (Math.random() > 0.5f) {
             holder.info.setImageResource(R.drawable.ic_info);

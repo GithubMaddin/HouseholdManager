@@ -20,26 +20,26 @@ public class RecommenderTree<E extends RecommenderTree.Item<E>> {
 
     public RecommenderTree(int numberRankedItems) {
         root = new Node<E>(null, "");
-        this.numberRankedItems =  numberRankedItems;
+        this.numberRankedItems = numberRankedItems;
     }
 
 
 
     /**
      * Function that updates ranking upwards
+     *
      * @param insertNode
      */
-    private void updateRankingList(Node<E> insertNode){
+    private void updateRankingList(Node<E> insertNode) {
         Node<E> currentNode = insertNode;
-        while (currentNode.parent != null){
-           Node<E> parentNode = currentNode.parent;
-           // case ranking liste does not contain node and is not completely filled
-           if (parentNode.recommendedChildren.size()<numberRankedItems){
-               if (!parentNode.recommendedChildren.contains(insertNode.item)){
-                   parentNode.recommendedChildren.add(insertNode.item);
-               }
-           }
-           else { // list is filled
+        while (currentNode.parent != null) {
+            Node<E> parentNode = currentNode.parent;
+            // case ranking liste does not contain node and is not completely filled
+            if (parentNode.recommendedChildren.size() < numberRankedItems) {
+                if (!parentNode.recommendedChildren.contains(insertNode.item)) {
+                    parentNode.recommendedChildren.add(insertNode.item);
+                }
+            } else { // list is filled
                 if (Collections.min(parentNode.recommendedChildren).compareTo(insertNode.item) < 0) {
                     // rank is higher
                     parentNode.recommendedChildren.add(insertNode.item);

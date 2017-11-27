@@ -6,15 +6,32 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context="de.was_wichtiges.householdmanager.shoppinglist.ShoppingList">
-    <AutoCompleteTextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                          android:id="@+id/edt_search" android:maxLines="1" android:layout_margin="12dp"
-                          android:lines="1"
-                          android:completionThreshold="1"
-                          android:imeOptions="actionGo"
-                          android:imeActionLabel="Hinzufügen"
-                          android:singleLine="true"/>
+    <android.support.v7.widget.Toolbar android:layout_width="match_parent"
+                                       android:layout_height="wrap_content"
+                                       android:minHeight="?android:attr/actionBarSize"
+                                       android:background="@color/colorPrimary" android:id="@+id/toolbar">
+
+    </android.support.v7.widget.Toolbar>
+
+    <RelativeLayout android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:id="@+id/lay_1"
+                    android:background="@color/colorPrimary">
+
+        <AutoCompleteTextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                              android:id="@+id/edt_search" android:maxLines="1"
+                              android:lines="1"
+                              android:completionThreshold="1"
+                              android:imeOptions="actionGo"
+                              android:imeActionLabel="Hinzufügen"
+                              android:layout_margin="4dp"
+                              android:textColor="@color/light_text"
+                              android:singleLine="true"/>
+    </RelativeLayout>
+
+
     <android.support.v7.widget.RecyclerView android:layout_width="match_parent" android:layout_height="match_parent"
-                                            android:id="@+id/lst_shopping" android:layout_below="@id/edt_search"/>
+                                            android:id="@+id/lst_shopping" android:layout_below="@id/lay_1"
+    />
 
 
 </RelativeLayout>

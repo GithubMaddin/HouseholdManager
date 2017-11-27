@@ -185,7 +185,7 @@ public class ShoppingListItem implements RecommenderTree.Item<ShoppingListItem> 
     }
 
     public String getImagePath() {
-        return "file://" + Overview.shoppingListItem.getAbsolutePath() + "/" + ByteLoader.fileMD5(getName());
+        return "file://" + Overview.shoppingListItem.getAbsolutePath() + "/" + ByteLoader.fileMD5(getName()) + ".jpg";
     }
 
     public int getRank() {
