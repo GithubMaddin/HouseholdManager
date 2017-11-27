@@ -7,12 +7,5 @@
         android:layout_height="match_parent"
         tools:context="de.was_wichtiges.householdmanager.Recommender">
 
-    <ImageButton android:layout_width="wrap_content" android:layout_height="wrap_content"
-                   android:src="@mipmap/ic_launcher"
-                   android:id="@+id/btn_erdbeere"
-/>
-    <ImageButton android:layout_width="50pt" android:layout_height="50pt"
-                 android:src="@mipmap/banane"
-                 android:id="@+id/btn_banane"
-    />
+
 </LinearLayout>

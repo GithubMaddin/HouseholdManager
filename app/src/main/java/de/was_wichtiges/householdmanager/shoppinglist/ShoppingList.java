@@ -26,6 +26,8 @@ public class ShoppingList extends AppCompatActivity implements ShoppingListAddDi
 
     private ShoppingListDataSource dataSource;
 
+    private RecommenderTree<ShoppingListItem> recommenderTree;
+
     private ShoppingListAdapter shoppingListAdapter;
     private RecommenderAdapter recommenderAdapter;
 
@@ -70,8 +72,21 @@ public class ShoppingList extends AppCompatActivity implements ShoppingListAddDi
         };
         new ItemTouchHelper(listShoppingCallback).attachToRecyclerView(listShopping);
 
+        recommenderTree = new RecommenderTree<>(5);
+        recommenderTree.addItem(new ShoppingListItem("Bananenbaum", 1, "kg", false));
+        recommenderTree.addItem(new ShoppingListItem("Banane", 1, "kg", false));
+        recommenderTree.addItem(new ShoppingListItem("Baum", 1, "kg", false));
+        recommenderTree.addItem(new ShoppingListItem("Bambus", 1, "kg", false));
+        recommenderTree.addItem(new ShoppingListItem("Bambusstücke", 1, "kg", false));
+        recommenderTree.addItem(new ShoppingListItem("Buchsbaum", 1, "kg", false));
+        recommenderTree.addItem(new ShoppingListItem("Apfel", 1, "kg", false));
+        recommenderTree.addItem(new ShoppingListItem("Apfelkuchen", 1, "kg", false));
+        recommenderTree.addItem(new ShoppingListItem("Apfelkuchendecke", 1, "kg", false));
+        recommenderTree.addItem(new ShoppingListItem("Apfelkuchendeckenecke", 1, "kg", false));
 
-        recommenderAdapter = new RecommenderAdapter();
+        recommenderTree.debug();
+
+        recommenderAdapter = new RecommenderAdapter(recommenderTree);
         editSearch.setAdapter(recommenderAdapter);
         editSearch.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

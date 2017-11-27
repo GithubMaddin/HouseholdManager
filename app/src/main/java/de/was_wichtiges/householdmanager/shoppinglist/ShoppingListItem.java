@@ -161,7 +161,6 @@ public class ShoppingListItem implements RecommenderTree.Item<ShoppingListItem> 
     }
 
 
-
     /**
      * Returns true if item is checked
      *
@@ -192,12 +191,12 @@ public class ShoppingListItem implements RecommenderTree.Item<ShoppingListItem> 
         this.rank = rank;
     }
 
-    public void increseRank(){
-        this.rank +=1;
+    public void increseRank() {
+        this.rank += 1;
     }
 
     @Override
     public int compareTo(ShoppingListItem shoppingListItem) {
-        return(this.rank - shoppingListItem.rank);
+        return (this.rank - shoppingListItem.rank);
     }
 }

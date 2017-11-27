@@ -15,7 +15,13 @@ import java.util.List;
  */
 public class RecommenderAdapter extends BaseAdapter implements Filterable {
 
+    private RecommenderTree<ShoppingListItem> recommenderTree;
+
     public List<ShoppingListItem> items = new ArrayList<>();
+
+    public RecommenderAdapter(RecommenderTree<ShoppingListItem> recommenderTree) {
+        this.recommenderTree = recommenderTree;
+    }
 
     @Override
     public int getCount() {
@@ -28,6 +34,7 @@ public class RecommenderAdapter extends BaseAdapter implements Filterable {
     }
 
     @Override
+
     public long getItemId(int i) {
         return 0;
     }
@@ -48,14 +55,10 @@ public class RecommenderAdapter extends BaseAdapter implements Filterable {
             @Override
             protected FilterResults performFiltering(CharSequence charSequence) {
                 FilterResults results = new FilterResults();
-                int s = 7;
-                if (charSequence != null)
-                    s -= charSequence.length();
                 ArrayList<ShoppingListItem> items = new ArrayList<>();
-                if (charSequence != null)
+                if (charSequence != null) {
                     items.add(new ShoppingListItem(charSequence.toString(), 1, "pcs", false));
-                for (int i = 0; i < s; i++) {
-                    items.add(new ShoppingListItem("Banane", 1, "kg", false));
+                    items.addAll(recommenderTree.searchRecommendedItems(charSequence.toString().toLowerCase()));
                 }
                 results.values = items;
                 results.count = items.size();
