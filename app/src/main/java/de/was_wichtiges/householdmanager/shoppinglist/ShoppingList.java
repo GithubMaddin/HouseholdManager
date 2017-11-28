@@ -80,21 +80,26 @@ public class ShoppingList extends AppCompatActivity implements ShoppingListAddDi
         new ItemTouchHelper(listShoppingCallback).attachToRecyclerView(listShopping);
 
         recommenderTree = new RecommenderTree<>(5);
-        recommenderTree.addItem(new ShoppingListItem("aba", 1, "kg", false));
+       /* recommenderTree.addItem(new ShoppingListItem("aba", 1, "kg", false));
         recommenderTree.addItem(new ShoppingListItem("bb", 1, "kg", false));
         recommenderTree.addItem(new ShoppingListItem("ab", 1, "kg", false));
-        /*recommenderTree.addItem(new ShoppingListItem("Bananenbaum", 1, "kg", false));
-        recommenderTree.addItem(new ShoppingListItem("Banane", 1, "kg", false));
-        recommenderTree.addItem(new ShoppingListItem("Baum", 1, "kg", false));
-        recommenderTree.addItem(new ShoppingListItem("Bambus", 1, "kg", false));
-        recommenderTree.debug();
-        recommenderTree.addItem(new ShoppingListItem("Bambusstücke", 1, "kg", false));
-        recommenderTree.addItem(new ShoppingListItem("Buchsbaum", 1, "kg", false));
-        recommenderTree.addItem(new ShoppingListItem("Apfel", 1, "kg", false));
-        recommenderTree.addItem(new ShoppingListItem("Apfelkuchen", 1, "kg", false));
-        recommenderTree.addItem(new ShoppingListItem("Apfelkuchendecke", 1, "kg", false));
-        recommenderTree.addItem(new ShoppingListItem("Apfelkuchendeckenecke", 1, "kg", false));
-*/
+        */
+        ShoppingListItem bananenbaum = new ShoppingListItem("Bananenbaum", 1, "kg", false, 1);
+        recommenderTree.addItem(bananenbaum);
+        recommenderTree.addItem(new ShoppingListItem("Banane", 1, "kg", false, 100));
+        recommenderTree.addItem(new ShoppingListItem("Baum", 1, "kg", false,50));
+        recommenderTree.addItem(new ShoppingListItem("Bambus", 1, "kg", false,5));
+        recommenderTree.addItem(new ShoppingListItem("Bambusstücke", 1, "kg", false,8));
+        recommenderTree.addItem(new ShoppingListItem("Buchsbaum", 1, "kg", false,7));
+        recommenderTree.addItem(new ShoppingListItem("Apfel", 1, "kg", false, 104));
+        recommenderTree.addItem(new ShoppingListItem("Apfelkuchen", 1, "kg", false, 2));
+        recommenderTree.addItem(new ShoppingListItem("Apfelkuchendecke", 1, "kg", false, 3));
+        recommenderTree.addItem(new ShoppingListItem("Apfelkuchendeckenecke", 1, "kg", false, 1));
+
+        recommenderTree.addItem(new ShoppingListItem("Tomate", 1, "kg", false, 45));
+        recommenderTree.addItem(new ShoppingListItem("Klopapier", 1, "kg", false, 55));
+        recommenderTree.addItem(new ShoppingListItem("Birne", 1, "kg", false, 12));
+
         recommenderTree.debug();
 
         Log.i("Listen", " ");
@@ -108,6 +113,28 @@ public class ShoppingList extends AppCompatActivity implements ShoppingListAddDi
         for (ShoppingListItem curItem : abc) {
             Log.i("Listenitem", curItem.getName());
         }
+
+
+
+        Log.i("jojojojojojojojojojojojojojoojoj", " ");
+
+        bananenbaum.setRank(1000);
+        recommenderTree.addItem(bananenbaum);
+
+        recommenderTree.debug();
+
+        Log.i("Listen", " ");
+        List<ShoppingListItem> cde = recommenderTree.searchRecommendedItems("b");
+        Collections.sort(cde, new Comparator<ShoppingListItem>() {
+            @Override
+            public int compare(ShoppingListItem shoppingListItem, ShoppingListItem t1) {
+                return -shoppingListItem.compareTo(t1);
+            }
+        });
+        for (ShoppingListItem curItem : cde) {
+            Log.i("Listenitem", curItem.getName());
+        }
+
 
         recommenderAdapter = new RecommenderAdapter(recommenderTree);
         editSearch.setAdapter(recommenderAdapter);

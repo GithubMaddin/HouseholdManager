@@ -5,6 +5,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -46,59 +47,29 @@ public class RecommenderTree<E extends RecommenderTree.Item<E>> {
                     parentNode.recommendedChildren.remove(Collections.min(parentNode.recommendedChildren));
                 }
             }
+            // TODO: Idee verbessern
+            Collections.sort((List<ShoppingListItem>) parentNode.recommendedChildren, new Comparator<ShoppingListItem>() {
+                @Override
+                public int compare(ShoppingListItem shoppingListItem, ShoppingListItem t1) {
+                    return -shoppingListItem.compareTo(t1);
+                }
+            });
+
+            // TODO: Abbruchbedingung
             currentNode = parentNode;
         }
     }
 
+
+
+
+    /**
+     * Adds new node and returns item-node of inserted item
+     * @param item
+     */
     public void addItem(E item) {
         String searchWord = item.getName().toLowerCase();
         updateRankingList(addNode(root, searchWord, item));
-    }
-
-
-
-
-
-/*
-    private Node<E> splitNode(Node<E> oldNode, E item, int splitCharPos, String remainingSearchWord){ // splitCharPos = index of last char of new guiding word
-        // identifify new searchword
-        String newGuidingCharcters = oldNode.guidingCharacters.substring(0, splitCharPos);
-        // delete old node from parents list
-        oldNode.parent.childrenNodes.remove(oldNode);
-        // create new Guiding Node
-        Node<E> newNode = new Node<E>(oldNode.parent, newGuidingCharcters);
-        // add new node to parent list
-        newNode.parent.childrenNodes.add(newNode);
-        // change
-        oldNode.guidingCharacters = oldNode.guidingCharacters.substring(splitCharPos);
-        // change parent of old character to new node
-        oldNode.parent = newNode;
-        // add old node
-        newNode.childrenNodes.add(oldNode);
-        // add item to new Node
-        if(remainingSearchWord == "") {
-            Log.i("Fall","1");
-            Node<E> newItemNode = new Node<E>(newNode, item);
-            newNode.childrenNodes.add(newItemNode);
-            return newItemNode;
-        } else {
-            Log.i("Fall","2");
-            Node<E> newSubGuidingNode = new Node<E>(newNode, remainingSearchWord);
-            //newSubGuidingNode.recommendedChildren = oldNode.recommendedChildren;
-            newNode.childrenNodes.add(newSubGuidingNode);
-            //newNode.recommendedChildren = oldNode.recommendedChildren;
-            Node<E> newItemNode = new Node<E>(newSubGuidingNode, item);
-            newSubGuidingNode.childrenNodes.add(newItemNode);
-            return newItemNode;
-        }
-    }
-*/
-
-
-
-    public void addNode(E item) {
-        String searchWord = item.getName().toLowerCase();
-        addNode(root, searchWord, item);
     }
 
     private Node<E> addNode(Node<E>currentNode , String searchword, E item){
@@ -124,7 +95,7 @@ public class RecommenderTree<E extends RecommenderTree.Item<E>> {
             }
             if (searchword.length() == 0) {
                 // case searchword completle match current guiding node: add new item Node
-                return addNewItemNode(currentNode, item);
+                checkExistenceOrCreateNew(currentNode,item);
                 //TODO: identify weather item already exist
             }
         }
@@ -140,6 +111,24 @@ public class RecommenderTree<E extends RecommenderTree.Item<E>> {
         }
         // otherwise (if no matching item was found) return an empty list
         return addNewChildGuidingAndItemNode(currentNode, item, searchword);
+    }
+
+    /**
+     * return true if item was updated
+     * @param currentNode
+     * @param item
+     * @return
+     */
+    private Node<E> checkExistenceOrCreateNew(Node<E> currentNode, E item){
+        for (Node<E> thisNode: currentNode.childrenNodes){
+            if(thisNode.type == Node.Type.ITEM){
+                if (thisNode.item.getName().equals(item.getName())){
+                    //TODO: Check weather this.node.item.equals(item) would be sufficient too.
+                    return thisNode;
+                }
+            }
+        }
+        return addNewItemNode(currentNode, item);
     }
 
     /**
@@ -185,7 +174,8 @@ public class RecommenderTree<E extends RecommenderTree.Item<E>> {
         // - first part of the old guiding word ending one character before the splitCarIndex
         Node<E> newParentGuidingNode = new Node<E>(currentNode.parent, currentNode.guidingCharacters.substring(0, splitCharIndex));
         // - same recommended children
-        newParentGuidingNode.recommendedChildren = currentNode.recommendedChildren;
+        newParentGuidingNode.recommendedChildren = new ArrayList<>();
+        newParentGuidingNode.recommendedChildren.addAll(currentNode.recommendedChildren);
         // - add current node as new child of new node
         newParentGuidingNode.childrenNodes.add(currentNode);
         // return old and add new guiding node to parents
